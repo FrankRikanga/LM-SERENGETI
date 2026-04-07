@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Serengeti Chatbot (Desktop)</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(120deg, #e3f2fd, #ffffff);
+}
+
+/* Sidebar */
+#sidebar {
+    width: 280px;
+    background: #007bff;
+    color: white;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+#sidebar h1 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+#sidebar p {
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Buttons in sidebar */
+#sidebar button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #007bff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+#sidebar button:hover {
+    background: #e6f0ff;
+}
+
+/* History */
+#history {
+    flex: 1;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 10px;
+    overflow-y: auto;
+}
+#history h3 {
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+#history ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#history li {
+    font-size: 13px;
+    background: rgba(255,255,255,0.2);
+    padding: 8px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+#history li:hover {
+    background: rgba(255,255,255,0.35);
+}
+
+#sidebar footer {
+    font-size: 12px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+/* Chat area */
+#chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f9f9f9;
+}
+
+/* Header */
+#header {
+    background: white;
+    padding: 15px 25px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #007bff;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#header a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+    border: 1px solid #007bff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+#header a:hover {
+    background: #007bff;
+    color: white;
+}
+
+/* Messages */
+#messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 15px;
+}
+.message {
+    padding: 12px 16px;
+    border-radius: 18px;
+    max-width: 70%;
+    word-wrap: break-word;
+    animation: fadeIn 0.3s ease;
+}
+.user {
+    background: #007bff;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.bot {
+    background: #f1f1f1;
+    color: #222;
+    align-self: stretch;       /* ✅ full width of chat area */
+    width: 100%;               /* ✅ ensure full width */
+    box-sizing: border-box;    /* ✅ include padding in width */
+    border-bottom-left-radius: 5px;
+    
+    line-height: 1.6;          /* ✅ comfortable line spacing */
+    white-space: pre-line;      /* ✅ keep line breaks */
+    padding: 12px 16px;         /* ✅ consistent padding inside bubble */
+}
+
+
+
+.english-response {
+    color: #007bff;
+    font-style: italic;
+    font-weight: 500;
+}
+.typing {
+    font-style: italic;
+    color: gray;
+    margin-left: 10px;
+}
+
+/* Input area */
+#input-area {
+    display: flex;
+    padding: 15px 20px;
+    background: white;
+    border-top: 1px solid #eee;
+}
+#input-area input {
+    flex: 1;
+    border: 1px solid #ddd;
+    outline: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #f8f9fa;
+}
+#input-area button {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+#input-area button:hover {
+    background: #0056b3;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#messages::-webkit-scrollbar,
+#history::-webkit-scrollbar {
+    width: 6px;
+}
+#messages::-webkit-scrollbar-thumb,
+#history::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+/* Mobile menu button */
+#mobile-menu-btn {
+    display: none; /* hidden on desktop */
+    position: fixed;
+    top: 18px;
+    left: 15px;
+    font-size: 20px;
+    background: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+/* Mobile sidebar hidden initially */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column; /* stack chat area below header if needed */
+        overflow: hidden;
+    }
+
+    #sidebar {
+        position: fixed;
+        left: -300px; /* hide offscreen */
+        top: 0;
+        height: 100%;
+        width: 250px;
+        z-index: 1000;
+        transition: left 0.3s ease;
+    }
+
+    #sidebar.active {
+        left: 0; /* show sidebar when active */
+    }
+
+    #mobile-menu-btn {
+        display: block;
+    }
+
+    #chat-area {
+        flex: 1;
+        width: 100%;
+        margin-left: 0; /* no margin on mobile */
+    }
+
+    #header span {
+        font-size: 16px;
+    }
+
+    #header a {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    #messages {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    #input-area input {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    #input-area button {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}
+/* Header layout fix for Chat Window, Welcome, and Logout */
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* allow wrapping on small screens */
+    gap: 10px;
+    padding: 15px 25px;
+}
+
+#header .header-left,
+#header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#header .header-left {
+    font-weight: 600;
+    color: #007bff;
+}
+
+#header .header-right {
+    margin-left: auto; /* push right content to far right */
+    gap: 10px;
+}
+
+/* Welcome message styling */
+#header .welcome {
+    font-size: 14px;
+    color: green;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    #header {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+
+    #header .welcome {
+        display: none; /* hide welcome on mobile */
+    }
+
+    #header a {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    /* Stack elements if screen too small */
+    #header .header-left,
+    #header .header-right {
+        flex: 1 1 100%;
+        justify-content: space-between;
+    }
+}
+/* Header layout fix: left & right alignment */
+#header {
+    display: flex;
+    justify-content: space-between; /* push right content to the far right */
+    align-items: center;
+    flex-wrap: wrap; /* allow wrapping if small screen */
+    padding: 15px 25px;
+    gap: 10px;
+}
+
+#header .header-left,
+#header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#header .header-left {
+    font-weight: 600;
+    color: #007bff;
+}
+
+#header .header-right a {
+    margin-left: auto; /* ensures it's always on the right */
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #007bff;
+    text-decoration: none;
+    color: #007bff;
+    transition: 0.3s;
+}
+
+#header .header-right a:hover {
+    background: #007bff;
+    color: white;
+}
+
+/* Welcome message styling */
+#header .welcome {
+    font-size: 14px;
+    color: green;
+    font-size: 18px;  /* bigger on computer/tablet */
+    font-weight: 600;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    #header {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+
+    #header .welcome {
+        display: none; /* hide welcome on small screens */
+    }
+
+    #header .header-left,
+    #header .header-right {
+        flex: 1 1 100%;
+        justify-content: space-between; /* ensure logout is far right */
+    }
+
+    #header .header-right a {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+}
+/* Hide Chat Window and Welcome message on phones */
+@media (max-width: 480px) {
+    #header .chat-title,
+    #header .welcome {
+        display: none;
+    }
+}
+/* Header layout fix: left & right alignment */
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 15px 25px;
+    gap: 10px;
+}
+
+/* Hide chat title and welcome on phones */
+@media (max-width: 768px) {
+    #header .chat-title,
+    #header .welcome {
+        display: none;
+    }
+
+    #mobile-menu-btn {
+        top: 10px;  /* move below header padding */
+        left: 10px;
+        z-index: 1002;
+    }
+
+    #header .header-right {
+        flex: 1 1 100%;
+        display: flex;
+        justify-content: flex-end; /* keep logout/login at far right */
+    }
+}
+
+
+</style>
+</head>
+<!-- Mobile menu button -->
+<div id="mobile-menu-btn" onclick="toggleSidebar()">☰</div>
+
+<body>
+
+<!-- Sidebar -->
+<div id="sidebar">
+    <div>
+        <h1>AmSerengeti</h1>
+        <p>Karibu kwa Serengeti AM — Rafiki yako msaidizi! Niulize chochote tujifunze.</p>
+
+        <!-- User Profile Button -->
+        <button class="profile-btn" onclick="window.location='/user_profile'">Profile</button>
+
+
+        <!-- Collaborate Button -->
+        <button onclick="window.location='/collaborate'"> Collaborate</button>
+
+        <!-- Post Button -->
+        <button onclick="window.location='/community'"> Post</button>
+
+
+
+        <div id="history">
+            <h3> Search History</h3>
+            <ul id="historyList"></ul>
+        </div>
+    </div>
+    <footer><p>Made by Frank John Rikanga © 2025</p></footer>
+</div>
+
+<!-- Chat area -->
+<div id="chat-area">
+    <div id="header">
+    <div class="header-left">
+        <span class="chat-title">Chat Window</span>
+        <span class="welcome">Welcome, {{ session['username'] }}!</span>
+    </div>
+
+    <div class="header-right">
+        {% if session.get("username") %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+    </div>
+    </div>
+
+
+
+    <div id="messages">
+        <div class="bot">Habari  Mimi ni Serengeti, msaidizi wako wa AI. Naweza kukusaidia vipi leo?</div>
+    </div>
+
+    <div id="input-area">
+        <input type="text" id="user_input" placeholder="Type your message and press Enter...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+function sendMessage() {
+    const userInput = document.getElementById("user_input");
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    const messagesDiv = document.getElementById("messages");
+    const historyList = document.getElementById("historyList");
+
+    // Add user message
+    messagesDiv.innerHTML += `<div class='user message'>${message}</div>`;
+
+    // Add to history
+    const li = document.createElement("li");
+    li.textContent = message;
+    li.onclick = () => { userInput.value = message; };
+    historyList.appendChild(li);
+
+    // Typing indicator
+    const typingDiv = document.createElement("div");
+    typingDiv.classList.add("typing");
+    typingDiv.textContent = "Serengeti is typing...";
+    messagesDiv.appendChild(typingDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    // Fetch bot response
+    fetch(`/get?msg=${message}`)
+        .then(resp => resp.text())
+        .then(data => {
+            messagesDiv.removeChild(typingDiv);
+            const botDiv = document.createElement("div");
+            if (data.startsWith("[ENGLISH]")) {
+                botDiv.classList.add("bot", "english-response");
+                data = data.replace("[ENGLISH]", "");
+            } else {
+                botDiv.classList.add("bot");
+            }
+            messagesDiv.appendChild(botDiv);
+            typeText(botDiv, data, 25); // <-- typing effect here
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        })
+        .catch(() => {
+            messagesDiv.removeChild(typingDiv);
+            messagesDiv.innerHTML += `<div class='bot'>Connection error. Please try again.</div>`;
+        });
+
+    userInput.value = "";
+}
+
+document.getElementById("user_input").addEventListener("keydown", e => {
+    if (e.key === "Enter") sendMessage();
+});
+
+function formatAIText(text) {
+    return text
+        // 0.5 line after commas
+        .replace(/,\s*/g, ",\n")
+        // 1 full line after periods
+        .replace(/\.\s*/g, ".\n\n")
+        // Add extra line before community quotes
+        .replace(/💬 Kutoka kwa community:/g, "\n\n💬 Kutoka kwa community:");
+}
+
+function typeText(element, text, speed = 30) {
+    element.innerHTML = "";
+    let i = 0;
+
+    // 🔧 normalize spacing:
+    // - 2+ newlines → exactly 1 line
+    text = text.replace(/\n{2,}/g, "\n\n");
+
+    const interval = setInterval(() => {
+        const char = text.charAt(i);
+
+        if (char === "\n") {
+            element.innerHTML += "<br>";
+        } else {
+            element.innerHTML += char;
+        }
+
+        i++;
+        if (i >= text.length) clearInterval(interval);
+
+        element.scrollIntoView({ behavior: "smooth", block: "end" });
+    }, speed);
+}
+
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("active");
+}
+
+
+</script>
+
+</body>
+</html>

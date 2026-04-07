@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chat with {{ target }} - Serengeti</title>
+<style>
+/* GENERAL RESET */
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(120deg,#e3f2fd,#ffffff);
+}
+
+/* CHAT AREA */
+#chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    width: 100%;
+    height: 100vh;
+    margin: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background: #f9f9f9;
+    overflow: hidden;
+}
+
+/* HEADER */
+#header {
+    background: #007bff;
+    color: white;
+    padding: 15px 20px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+#header a { color: white; text-decoration: none; font-size: 14px; }
+
+/* MESSAGES */
+#messages {
+    flex: 1;
+    padding: 12px 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.message {
+    padding: 10px 14px;
+    border-radius: 18px;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+.user { background: #007bff; color: white; align-self: flex-end; }
+.friend { background: #f1f1f1; color: #222; align-self: flex-start; }
+
+/* INPUT AREA */
+#input-area {
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #ddd;
+    background: white;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+#input-area input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+button.send {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+button.send:hover { background: #0056b3; }
+
+/* NOTIFICATION */
+.notification { position: relative; display: inline-block; }
+.badge { position: absolute; top: -8px; right: -12px; background: red; color: white; font-size: 12px; border-radius: 50%; padding: 2px 6px; }
+
+/* RESPONSIVE FOR MOBILE */
+@media (max-width: 480px) {
+    #chat-area { margin: 10px; height: 100vh; }
+    #messages { padding: 10px; gap: 8px; }
+    .message { max-width: 90%; padding: 8px 12px; font-size: 14px; }
+    #input-area { flex-direction: column; gap: 6px; padding: 10px; }
+    #input-area input { width: 100%; margin: 0; }
+    button.send { width: 100%; }
+    #header { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div id="chat-area">
+    <div id="header">
+        <span>Chat with {{ target }}</span>
+        <a href="{{ url_for('home') }}">Back to home</a>
+        <span class="notification">New Messages: <span class="badge" id="notif-count">0</span></span>
+    </div>
+    <div id="messages"></div>
+    <div id="input-area">
+        <input type="text" id="user_input" placeholder="Type a message...">
+        <button class="send" onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+const messagesDiv = document.getElementById("messages");
+const notifBadge = document.getElementById("notif-count");
+
+// --- Fetch existing messages ---
+async function loadMessages(){
+    const response = await fetch(`/get_messages/{{ target }}`);
+    const data = await response.json();
+    messagesDiv.innerHTML = '';
+    let unreadCount = 0;
+    data.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = (msg.sender === "{{ target }}") ? "friend message" : "user message";
+        div.textContent = msg.message;
+        messagesDiv.appendChild(div);
+        if(msg.sender === "{{ target }}") unreadCount++;
+    });
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    notifBadge.textContent = unreadCount;
+}
+
+// --- Send new message ---
+async function sendMessage(){
+    const input = document.getElementById("user_input");
+    const msg = input.value.trim();
+    if(!msg) return;
+    messagesDiv.innerHTML += `<div class="user message">${msg}</div>`;
+    input.value = "";
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    await fetch("/send_message", {
+        method: "POST",
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: `receiver={{ target }}&message=${encodeURIComponent(msg)}`
+    });
+}
+
+// --- Poll for new messages every 3 seconds ---
+setInterval(async () => {
+    const response = await fetch(`/get_messages/{{ target }}`);
+    const data = await response.json();
+    messagesDiv.innerHTML = '';
+    let unreadCount = 0;
+    data.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = (msg.sender === "{{ target }}") ? "friend message" : "user message";
+        div.textContent = msg.message;
+        messagesDiv.appendChild(div);
+        if(msg.sender === "{{ target }}") unreadCount++;
+    });
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    notifBadge.textContent = unreadCount;
+}, 3000);
+
+// Load messages on page load
+loadMessages();
+
+document.getElementById("user_input").addEventListener("keydown", e => { if(e.key==="Enter") sendMessage(); });
+</script>
+
+</body>
+</html>

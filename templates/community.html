@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Community | Serengeti Chatbot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: "Poppins", sans-serif; background: #f0f4f8; margin: 0; color: #333; }
+    header { background: #007bff; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    header h1 { font-size: 18px; margin: 5px 0; }
+    header a { color: white; text-decoration: none; font-weight: 600; margin-top:5px; }
+    main { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+    .post-card { display: flex; gap: 12px; background: white; padding: 12px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 12px; align-items: flex-start; flex-wrap: wrap; }
+    .post-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff; }
+    .post-content { flex: 1; min-width: 0; }
+    .post-content p.user { font-weight: 600; margin: 0; color: #007bff; font-size: 14px; }
+    .post-content p.text { margin: 4px 0; font-size: 14px; }
+    .post-content .user a { color: #007bff; text-decoration: none; }
+    .post-content .user a:hover { text-decoration: underline; }
+    .post-content small { color: #888; font-size: 12px; }
+    .back-home { display: inline-block; margin-bottom: 15px; padding: 6px 12px; background: #007bff; color: white; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; }
+    .back-home:hover { background: #0056b3; }
+    .like-btn { border: none; background: transparent; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 5px; }
+    .delete-btn { background:#dc3545; color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; }
+    .no-posts { text-align: center; margin-top: 40px; color: #555; font-size: 16px; }
+    @media (max-width: 500px) {
+      .post-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .post-card img { width: 40px; height: 40px; }
+      header { justify-content: center; text-align: center; gap: 10px; }
+      header h1 { font-size: 16px; }
+      header a { margin-top: 5px; }
+      .post-content p.user, .post-content p.text, .post-content small { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Community Feed</h1>
+    <a href="/user_profile" style="margin-top: 0px; text-align: center; margin-left: 10%; color: #272424;">My Profile</a>
+  </header>
+
+  <main>
+    <a class="back-home" href="/">Home</a>
+
+    {% for post in posts %}
+    <div class="post-card">
+      <img src="{{ url_for('static', filename='profile_images/' + (post[4] or 'default_avatar.png')) }}" alt="Profile">
+
+      <div class="post-content">
+        <p class="user">
+          <a href="/user/{{ post[3] }}">{{ post[3] }}</a>
+        </p>
+
+        <p class="text">
+          <a href="/post/{{ post[0] }}" style="color:#333; text-decoration:none;">
+            {{ post[1] }}
+          </a>
+        </p>
+
+        <small>{{ post[2] }}</small>
+
+        <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+          <!-- LIKE BUTTON -->
+          <button class="like-btn" data-id="{{ post[0] }}">
+            ❤️ <span class="count">{{ post[5] }}</span>
+          </button>
+
+          <!-- DELETE BUTTON: Admins or Owner -->
+          {% if session.role == 'admin' or session.user_id|int == post[6]|int %}
+          <button class="delete-btn" data-id="{{ post[0] }}">
+            Delete
+          </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="no-posts">No posts yet. Be the first to post! 🌟</div>
+    {% endfor %}
+
+  </main>
+
+<script>
+  // Like button
+  document.querySelectorAll(".like-btn").forEach(btn => {
+    btn.onclick = () => {
+      fetch(`/toggle_like/${btn.dataset.id}`, { method: "POST" })
+        .then(res => res.json())
+        .then(data => {
+          if (data.likes !== undefined) {
+            btn.querySelector(".count").textContent = data.likes;
+            btn.style.color = data.action === "liked" ? "red" : "black";
+          }
+        });
+    };
+  });
+
+  // Delete button
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.onclick = () => {
+      if (!confirm("Are you sure you want to delete this post?")) return;
+
+      fetch(`/delete_post/${btn.dataset.id}`, { method: "POST" })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            btn.closest(".post-card").remove();
+          } else {
+            alert(data.error || "Could not delete post.");
+          }
+        });
+    };
+  });
+</script>
+
+</body>
+</html>
