@@ -1,0 +1,31 @@
+knowledge_data = {
+    "Fizikia ni nini?": "Fizikia ni sayansi inayochunguza kanuni zinazoongoza tabia ya vitu na nishati katika ulimwengu, \nikijumuisha mambo makubwa kama sayari na madogo kama atomi.",
+    "Nani alikukutengeneza wewe?": "Nimetengenezwa na Frank John Rikanga.",
+    "Who created you?": "Nimetengenezwa na Frank John Rikanga.",
+    "Ni mtu gani aliyekujenga?": "Nimejengwa na Frank John Rikanga.",
+    "Which person built you?": "Nimejengwa na Frank John Rikanga.",
+    "Who is your developer?": "Msanidi wangu ni Frank John Rikanga.",
+    "Umetengenezwa na kampuni gani au mtu gani?": "Nimetengenezwa na mtu aitwaye Frank John Rikanga.",
+    "Which company or person created you?": "Nimetengenezwa na mtu aitwaye Frank John Rikanga.",
+    "wewe ni nani?": "Mimi ni Serengeti",
+    "Who are you?": "Mimi ni Serengeti",
+    "Kemia ni nini na kwa nini inachukuliwa kuwa somo la msingi katika maisha ya binadamu?": "Kemia ni tawi la sayansi linalojihusisha na uchunguzi wa muundo, tabia, sifa na mabadiliko ya dutu (matter). Dutu ni chochote chenye uzito (mass) na kinachochukua nafasi (space). Hii inajumuisha vitu vyote vinavyopatikana katika mazingira yetu kama vile hewa, maji, chakula, udongo, dawa, na vifaa tunavyotumia kila siku.\n\nKemia inachukuliwa kuwa somo la msingi kwa sababu ina mchango mkubwa katika karibu kila kipengele cha maisha ya binadamu. Kupitia kemia, binadamu wameweza:\n\nKutengeneza na kuboresha chakula kwa kutumia vihifadhi na mbolea\n\nKutengeneza dawa za kutibu magonjwa\n\nKutengeneza bidhaa za viwandani kama plastiki, sabuni, rangi na saruji\n\nKuendeleza teknolojia kama betri, simu na kompyuta\n\nKulinda mazingira kwa kudhibiti uchafuzi wa hewa, maji na ardhi\n\nKwa hiyo, bila kemia, maendeleo ya jamii ya kisasa yasingewezekana. Kemia hutusaidia kuelewa ulimwengu unaotuzunguka na kutatua changamoto za kila siku.",
+    "What is chemistry and why is it considered a fundamental subject in human life?": "Kemia ni tawi la sayansi linalojihusisha na uchunguzi wa muundo, tabia, sifa na mabadiliko ya dutu (matter). Dutu ni chochote chenye uzito (mass) na kinachochukua nafasi (space). Hii inajumuisha vitu vyote vinavyopatikana katika mazingira yetu kama vile hewa, maji, chakula, udongo, dawa, na vifaa tunavyotumia kila siku.\n\nKemia inachukuliwa kuwa somo la msingi kwa sababu ina mchango mkubwa katika karibu kila kipengele cha maisha ya binadamu. Kupitia kemia, binadamu wameweza:\n\nKutengeneza na kuboresha chakula kwa kutumia vihifadhi na mbolea\n\nKutengeneza dawa za kutibu magonjwa\n\nKutengeneza bidhaa za viwandani kama plastiki, sabuni, rangi na saruji\n\nKuendeleza teknolojia kama betri, simu na kompyuta\n\nKulinda mazingira kwa kudhibiti uchafuzi wa hewa, maji na ardhi\n\nKwa hiyo, bila kemia, maendeleo ya jamii ya kisasa yasingewezekana. Kemia hutusaidia kuelewa ulimwengu unaotuzunguka na kutatua changamoto za kila siku.",
+    "Ni rasilimali zipi zinazopendekezwa kutumika kujadili hali halisi zinazotumia dhana ya milinganyo ya wakati mmoja?": "Rasilimali zinazopendekezwa ni maktaba za mtandaoni na zisizo mtandaoni, programu, michezo, na vitu halisi.",
+    "Hali halisi zinawakilishwaje katika dhana ya milinganyo ya mstari ya wakati mmoja?": "Hali halisi zinawakilishwa kwa kutumia mifumo ya milinganyo ya mstari ya wakati mmoja, kwa kuelezea vigezo, kuzitatua na kutafsiri matokeo.",
+    "How are real-life scenarios represented in the concept of linear simultaneous equations?": "Hali halisi zinawakilishwa kwa kutumia mifumo ya milinganyo ya mstari ya wakati mmoja, kwa kuelezea vigezo, kuzitatua na kutafsiri matokeo.",
+    "Kikwete": "Raisi wa 4 wa Tanzania"
+}
+
+translations = {
+    "Fizikia ni sayansi inayochunguza kanuni zinazoongoza tabia ya vitu na nishati katika ulimwengu, ": "Physics is the science that studies the principles that govern the behavior of matter and energy in the universe, including very large things like planets and very small ones like atoms.",
+    "Nimetengenezwa na Frank John Rikanga.": "I was created by Frank John Rikanga.",
+    "Nimejengwa na Frank John Rikanga.": "Nimejengwa na Frank John Rikanga.",
+    "Msanidi wangu ni Frank John Rikanga.": "Nimejengwa na Frank John Rikanga.",
+    "Nimetengenezwa na mtu aitwaye Frank John Rikanga.": "I was created by a person named Frank John Rikanga.",
+    "Mimi ni Serengeti": "I am Serengeti",
+    "Kemia ni tawi la sayansi linalojihusisha na uchunguzi wa muundo, tabia, sifa na mabadiliko ya dutu (matter). Dutu ni chochote chenye uzito (mass) na kinachochukua nafasi (space). Hii inajumuisha vitu vyote vinavyopatikana katika mazingira yetu kama vile hewa, maji, chakula, udongo, dawa, na vifaa tunavyotumia kila siku.": "Chemistry is a branch of science that deals with the study of the composition, structure, properties, and changes of matter. Matter is anything that has mass and occupies space. This includes all materials found in our environment such as air, water, food, soil, medicines, and everyday products.\n\nChemistry is considered a fundamental subject because it plays a major role in almost every aspect of human life. Through chemistry, humans have been able to:\n\nProduce and preserve food using fertilizers and preservatives\n\nManufacture medicines to treat diseases\n\nProduce industrial products such as plastics, soaps, paints, and cement\n\nAdvance technology such as batteries, mobile phones, and computers\n\nProtect the environment by controlling pollution of air, water, and land\n\nTherefore, without chemistry, the development of modern society would not be possible. Chemistry helps us understand the world around us and solve daily life challenges.",
+    "Rasilimali zinazopendekezwa ni maktaba za mtandaoni na zisizo mtandaoni, programu, michezo, na vitu halisi.": "The recommended resources are offline and online libraries, applications, games, and real objects.",
+    "Hali halisi zinawakilishwa kwa kutumia mifumo ya milinganyo ya mstari ya wakati mmoja, kwa kuelezea vigezo, kuzitatua na kutafsiri matokeo.": "Real-life scenarios are represented using systems of linear simultaneous equations by describing variables, solving them, and interpreting the results.",
+    "Raisi wa 4 wa Tanzania": "4th president of Tanzania"
+}

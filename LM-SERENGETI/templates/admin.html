@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel | ChatNow</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #1a73e8, #0b3954);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 450px;
+      padding: 20px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 15px;
+      font-size: 22px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    a {
+      color: #ffcc00;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 15px;
+      font-weight: bold;
+      word-wrap: break-word;
+    }
+    select, input, textarea, button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+    select, input, textarea {
+      background: #f0f4f8;
+      color: #333;
+    }
+    textarea {
+      min-height: 80px; /* bigger text areas */
+      resize: vertical;
+    }
+    button {
+      background: #ffcc00;
+      color: #1a1a1a;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-size: 16px;
+      padding: 10px;
+    }
+    button:hover {
+      background: #ffd633;
+    }
+    #msg {
+      margin-top: 10px;
+      font-weight: bold;
+      word-wrap: break-word;
+    }
+
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 500px) {
+      .container {
+        padding: 15px;
+      }
+      input, textarea, select, button {
+        font-size: 14px;
+        padding: 10px;
+      }
+      button {
+        padding: 8px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Admin Panel</h2>
+    <a href="/logout">Logout</a>
+
+    <form id="qaForm">
+      <select id="category">
+        <option value="general">General</option>
+        <option value="science">Science</option>
+        <option value="politics">Politics</option>
+      </select>
+
+      <input type="text" id="question" placeholder="Enter Question" required>
+      <textarea id="answer" placeholder="Enter Answer" required></textarea>
+      <textarea id="translation" placeholder="Enter English Translation" required></textarea>
+      <button type="button" onclick="addQA()">Add</button>
+    </form>
+
+    <p id="msg"></p>
+    <a href="http://127.0.0.1:5000/">back to home</a>
+  </div>
+
+  <script>
+    async function addQA() {
+      let data = {
+        category: document.getElementById("category").value,
+        question: document.getElementById("question").value,
+        answer: document.getElementById("answer").value,
+        translation: document.getElementById("translation").value
+      };
+
+      let res = await fetch("/admin/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      let text = await res.text();
+      document.getElementById("msg").innerText = text;
+    }
+  </script>
+</body>
+</html>
