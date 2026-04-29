@@ -2,8 +2,6 @@ setuptools>=65
 wheel
 Flask==2.3.3
 Werkzeug==2.3.7
-
-
 spacy==2.1
 thinc==8.2.3
 blis==0.7.11
