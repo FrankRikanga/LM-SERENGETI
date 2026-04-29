@@ -2,11 +2,11 @@ setuptools>=65
 wheel
 Flask==2.3.3
 Werkzeug==2.3.7
-ChatterBot==1.0.5
-chatterbot_corpus==1.2.0
+
+
 spacy==2.1
 thinc==8.2.3
 blis==0.7.11
 numpy==1.26.4
-python==2.9
+
 
