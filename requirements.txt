@@ -8,3 +8,5 @@ spacy==2.1
 thinc==8.2.3
 blis==0.7.11
 numpy==1.26.4
+python==2.9
+
