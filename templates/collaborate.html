@@ -2,248 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Collaborate | Serengeti Chatbot</title>
-  <style>
-    body {
-      font-family: Poppins, Arial, sans-serif;
-      background: #f4f9ff;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background: #007bff;
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 15px 20px;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 10px;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    header a {
-      color: white;
-      text-decoration: none;
-      background: rgba(255,255,255,0.2);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: bold;
-    }
-
-    header a:hover {
-      background: rgba(255,255,255,0.35);
-    }
-
-    main {
-      max-width: 600px;
-      margin: 20px auto;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      padding: 20px;
-    }
-
-    h2 {
-      text-align: center;
-      color: #007bff;
-      margin-bottom: 15px;
-    }
-
-    /* Search Bar */
-    #user-search {
-      width: 100%;
-      max-width: 400px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-      margin: 0 auto 20px auto;
-      display: block;
-    }
-
-    .user-card {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid #eee;
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin: 10px 0;
-      transition: 0.2s;
-    }
-
-    .user-card:hover {
-      background: #f0f8ff;
-    }
-
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .user-info a {
-      text-decoration: none;
-      color: #007bff;
-      font-weight: 600;
-      word-break: break-word;
-    }
-
-    .user-info a:hover {
-      text-decoration: underline;
-    }
-
-    .join-btn {
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 6px 12px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .join-btn:hover {
-      background: #0056b3;
-    }
-
-    .posts-btn {
-      background: #6fcf97;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 13px;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    /* Buttons container */
-.user-card div:last-child {
-  display: flex;
-  gap: 10px;
-  flex-wrap: nowrap; /* prevent buttons from stacking */
-  align-items: center;
-  flex-shrink: 0;
-}
-
-/* Make buttons responsive but stay in a row */
-.join-btn, .posts-btn {
-  white-space: nowrap; /* prevent text from breaking */
-  flex: 1; /* grow to fill row equally */
-  min-width: 80px; /* ensure buttons are not too small */
-  text-align: center;
-}
-
-    /* ===== MOBILE RESPONSIVE ===== */
-    @media (max-width: 500px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 15px;
-      }
-      header h1 {
-        font-size: 18px;
-        margin-bottom: 8px;
-      }
-      main {
-        margin: 15px 10px;
-        padding: 15px;
-      }
-      .user-card {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-      .user-info {
-        gap: 8px;
-      }
-      .join-btn, .posts-btn {
-        width: 100%;
-        text-align: center;
-      }
-      #user-search {
-        font-size: 14px;
-      }
-    }
-    @media (max-width: 500px) {
-  .user-card div:last-child {
-    justify-content: space-between; /* keep buttons side by side */
-    width: 100%;
-  }
-  .join-btn, .posts-btn {
-    flex: 1; /* still stay in a row */
-  }
-}
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <header>
-    <h1>Collaborate</h1>
-    <a href="/">Home</a>
+
+  <header class="page-header">
+    <h1> Collaborate</h1>
+    <div class="header-links">
+      <a href="/">Home</a>
+    </div>
   </header>
 
-  <main>
-    <h2>Available Users</h2>
-    
-    <!-- Search Bar -->
-    <input type="text" id="user-search" placeholder="Search users...">
+  <div class="page-wrapper" style="max-width:680px;">
+
+    <h2 class="section-title">Available Users</h2>
+
+    <!-- Search -->
+    <div class="collab-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="user-search" placeholder="Search users…">
+    </div>
 
     {% if users %}
       {% for user in users %}
-        <div class="user-card">
-          <div class="user-info">
-            <img src="{{ url_for('static', filename='profile_images/' + user.profile_pic) }}"
-                 alt="Profile"
-                 style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
-            <a href="/user/{{ user.username }}">{{ user.username }}</a>
-            <a href="/user_posts/{{ user.username }}" class="posts-btn" style="color:black;">Posts</a>
-          </div>
-
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <span id="joins-{{ user.username }}">{{ user.joins }} joined</span>
-            <button class="join-btn" id="btn-{{ user.username }}"
-              onclick="toggleJoin('{{ user.username }}')">
-              {{ 'Unjoin' if user.joined else 'Join' }}
-            </button>
-          </div>
+      <div class="user-card">
+        <div class="user-info">
+          <img class="avatar avatar-md"
+            src="{{ url_for('static', filename='profile_images/' + user.profile_pic) }}"
+            alt="{{ user.username }}">
+          <a href="/user/{{ user.username }}" class="username">{{ user.username }}</a>
         </div>
+
+        <div class="user-actions">
+          <a href="/user_posts/{{ user.username }}" class="btn btn-ghost btn-sm">Posts</a>
+          <span class="join-count" id="joins-{{ user.username }}">{{ user.joins }} joined</span>
+          <button class="btn btn-primary btn-sm" id="btn-{{ user.username }}"
+            onclick="toggleJoin('{{ user.username }}')">
+            {{ 'Unjoin' if user.joined else 'Join' }}
+          </button>
+        </div>
+      </div>
       {% endfor %}
     {% else %}
-      <p style="text-align:center; color:gray;">No users available for collaboration right now.</p>
+      <div class="empty-state">No users available for collaboration right now. 🌍</div>
     {% endif %}
-  </main>
 
-<script>
-function toggleJoin(username) {
-  fetch(`/toggle_join/${username}`, { method: "POST" })
-  .then(res => res.json())
-  .then(data => {
-    if (data.error) return;
-    document.getElementById("joins-" + username).innerText = data.joins + " joined";
-    document.getElementById("btn-" + username).innerText =
-      data.action === "joined" ? "Unjoin" : "Join";
+  </div>
+
+  <script>
+  function toggleJoin(username) {
+    fetch(`/toggle_join/${username}`, { method: "POST" })
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) return;
+        document.getElementById("joins-" + username).innerText = data.joins + " joined";
+        document.getElementById("btn-" + username).innerText =
+          data.action === "joined" ? "Unjoin" : "Join";
+      });
+  }
+
+  document.getElementById("user-search").addEventListener("input", function () {
+    const f = this.value.toLowerCase();
+    document.querySelectorAll(".user-card").forEach(card => {
+      const name = card.querySelector(".username").innerText.toLowerCase();
+      card.style.display = name.includes(f) ? "" : "none";
+    });
   });
-}
-
-// Search filter
-document.getElementById("user-search").addEventListener("input", function() {
-  let filter = this.value.toLowerCase();
-  document.querySelectorAll(".user-card").forEach(card => {
-    let username = card.querySelector(".user-info a").innerText.toLowerCase();
-    card.style.display = username.includes(filter) ? "flex" : "none";
-  });
-});
-</script>
-
+  </script>
 </body>
 </html>
