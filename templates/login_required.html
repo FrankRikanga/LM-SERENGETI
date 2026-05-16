@@ -1,77 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Access Denied</title>
-    <style>
-         body {
-            font-family: Arial, sans-serif;
-            background: #f8f8f8;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            padding: 10px; /* padding for small screens */
-        }
-        .box {
-            background: white;
-            padding: 30px 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 100%; /* flexible width for mobile */
-        }
-        h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-        p {
-            color: #555;
-            font-size: 14px;
-        }
-        a.button {
-            display: inline-block;
-            margin-top: 20px;
-            background: #007BFF;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-            transition: background 0.3s;
-        }
-        a.button:hover {
-            background: #0056b3;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 480px) {
-            .box {
-                padding: 20px 15px;
-            }
-            h2 {
-                font-size: 18px;
-            }
-            p {
-                font-size: 13px;
-            }
-            a.button {
-                font-size: 13px;
-                padding: 8px 16px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Denied | Serengeti Chatbot</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <div class="box">
-        <h2>Hey! You don’t have an account yet 😅</h2>
-        <p>To access this page, please register now.</p>
-        <a href="{{ url_for('register') }}" class="button">Register Now</a>
+<body class="denied-page">
+  <div class="denied-card">
+    <div class="denied-icon">😅</div>
+    <h2>You don't have an account yet</h2>
+    <p>To access this page, please create a free account. It only takes a few seconds!</p>
+    <a href="{{ url_for('register') }}" class="btn btn-primary">Register Now</a>
+    <div style="margin-top:14px;">
+      <a href="{{ url_for('login') }}" style="font-size:0.85rem; color:var(--text-muted);">Already have an account? Login</a>
     </div>
+  </div>
 </body>
 </html>
+
