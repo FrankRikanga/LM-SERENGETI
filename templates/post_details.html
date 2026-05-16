@@ -1,175 +1,75 @@
-<!-- WRAPPER (centers everything) -->
-<div style="max-width:800px; margin:40px auto; padding:0 15px;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post | Serengeti Chatbot</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
 
-  <!-- HEADER BAR (separate) -->
-  <div style="
-    background:#007bff;
-    color:white;
-    padding:14px 20px;
-    font-weight:600;
-    font-size:18px;
-    border-radius:12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 4px 12px rgba(0,0,0,0.08);
-    margin-bottom:20px;
-    flex-wrap:wrap;
-  ">
-    💬 Community Post
-    <a href="/community" style="
-      color:white;
-      text-decoration:none;
-      font-size:14px;
-      margin-top:8px;
-    ">
-      ← Back
-    </a>
-  </div>
+  <header class="page-header">
+    <h1>💬 Community Post</h1>
+    <div class="header-links">
+      <a href="/community">← Back</a>
+    </div>
+  </header>
 
-  <!-- POST + REPLIES CARD -->
-  <div style="
-    background:white;
-    border-radius:14px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.08);
-    overflow:hidden;
-  ">
+  <div class="page-wrapper" style="max-width:720px;">
 
-    <!-- CONTENT -->
-    <div style="padding:20px;">
+    <!-- Original Post -->
+    <div class="post-detail-card">
+      <div class="post-detail-body">
 
-      <!-- POST -->
-      <div class="post-content" style="display:flex; gap:12px; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap;">
-        <!-- Profile Image -->
-        <img src="{{ url_for('static', filename='profile_images/' + post[3]) }}" alt="Profile" style="
-          width:48px;
-          height:48px;
-          border-radius:50%;
-          object-fit:cover;
-          flex-shrink:0;
-        ">
-        <div style="flex:1; min-width:0;">
-          <p class="user" style="margin:0; font-weight:600; color:#007bff;">
-            {{ post[2] }}
-          </p>
-          <p class="text" style="margin:8px 0;">
-            {{ post[0] }}
-          </p>
-          <small style="color:#888;">
-            {{ post[1] }}
-          </small>
+        <div class="post-card" style="box-shadow:none; padding:0; margin:0;">
+          <img class="avatar avatar-md"
+            src="{{ url_for('static', filename='profile_images/' + post[3]) }}"
+            alt="Profile">
+          <div class="post-body">
+            <div class="post-author">{{ post[2] }}</div>
+            <div class="post-text">{{ post[0] }}</div>
+            <div class="post-time">{{ post[1] }}</div>
+          </div>
         </div>
-      </div>
 
-      <!-- DIVIDER -->
-      <hr style="border:none; border-top:1px solid #eee; margin:18px 0;">
+        <hr class="divider">
 
-      <!-- REPLIES -->
-      <div class="replies">
-        <h3 style="margin:0 0 12px 0; color:#007bff; font-size:16px;">
-          💬 Replies
-        </h3>
+        <!-- Replies -->
+        <div class="section-title">💬 Replies</div>
 
         {% for c in comments %}
-          <div style="display:flex; gap:10px; align-items:flex-start; margin-bottom:14px; flex-wrap:wrap;">
-            <!-- Commenter profile image -->
-            <img src="{{ url_for('static', filename='profile_images/' + c[3] if c[3] else 'default_avatar.png') }}" alt="Profile" style="
-              width:36px;
-              height:36px;
-              border-radius:50%;
-              object-fit:cover;
-              flex-shrink:0;
-            ">
-            <div style="flex:1; min-width:0;">
-              <p style="margin:0; font-weight:600;">
-                {{ c[2] }}
-              </p>
-              <p style="margin:4px 0;">
-                {{ c[0] }}
-              </p>
-              <small style="color:#888;">
-                {{ c[1] }}
-              </small>
-            </div>
+        <div class="reply-card">
+          <img class="avatar avatar-sm"
+            src="{{ url_for('static', filename='profile_images/' + (c[3] if c[3] else 'default_avatar.png')) }}"
+            alt="Profile">
+          <div style="flex:1; min-width:0;">
+            <div class="reply-meta">{{ c[2] }}</div>
+            <div class="reply-text">{{ c[0] }}</div>
+            <div class="reply-time">{{ c[1] }}</div>
           </div>
-          <hr style="border:none; border-top:1px solid #f2f2f2;">
+        </div>
+        {% else %}
+        <p style="color:var(--text-muted); font-size:0.875rem; margin:10px 0;">No replies yet. Be the first!</p>
         {% endfor %}
+
+        <!-- Reply Form -->
+        <form method="POST" action="/comment/{{ post_id }}" class="reply-form">
+          <div class="reply-input-row">
+            <img class="avatar avatar-sm" style="margin-top:4px;"
+              src="{{ url_for('static', filename='profile_images/' + current_user_profile) }}"
+              alt="You">
+            <textarea class="form-control" name="comment" required
+              placeholder="Write a reply…"></textarea>
+          </div>
+          <div class="reply-submit-row">
+            <button type="submit" class="btn btn-primary btn-sm">Reply</button>
+            <a href="#" style="font-size:0.82rem; color:var(--brand); font-weight:600;">↑ Top</a>
+          </div>
+        </form>
+
       </div>
+    </div>
 
-      <!-- REPLY FORM -->
-      <form method="POST" action="/comment/{{ post_id }}" style="margin-top:15px;">
-        <div style="display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap;">
-          <!-- Current user profile image -->
-          <img src="{{ url_for('static', filename='profile_images/' + current_user_profile) }}" alt="Profile" style="
-            width:40px;
-            height:40px;
-            border-radius:50%;
-            object-fit:cover;
-            margin-top:4px;
-            flex-shrink:0;
-          ">
-          <textarea
-            name="comment"
-            required
-            placeholder="Write a reply..."
-            style="
-              flex:1;
-              min-width:0;
-              padding:12px;
-              border-radius:10px;
-              border:1px solid #ddd;
-              font-family:Poppins, sans-serif;
-              resize:none;
-              outline:none;
-            "
-          ></textarea>
-        </div>
-
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          margin-top:10px;
-          flex-wrap:wrap;
-          gap:8px;
-        ">
-          <button type="submit" style="
-            padding:8px 18px;
-            background:#007bff;
-            color:white;
-            border:none;
-            border-radius:8px;
-            font-weight:600;
-            cursor:pointer;
-            flex-shrink:0;
-          ">
-            Reply
-          </button>
-
-          <a href="#top" style="
-            font-size:13px;
-            text-decoration:none;
-            color:#007bff;
-            font-weight:600;
-          ">
-            ↑ Top
-          </a>
-        </div>
-      </form>
-
-    </div> <!-- end content -->
-  </div> <!-- end post+replies card -->
-</div> <!-- end wrapper -->
-
-<!-- RESPONSIVE TWEAKS -->
-<style>
-@media (max-width: 480px) {
-  .post-content, .replies > div, form > div {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .post-content img, .replies img, form img {
-    margin-bottom:8px;
-  }
-}
-</style>
+  </div>
+</body>
+</html>
