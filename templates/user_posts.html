@@ -2,247 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{{ username }} Posts</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-  <style>
-/* BASE STYLES */
-body {
-    font-family: Poppins, Arial, sans-serif;
-    background: #f4f9ff;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    background: #007bff;
-    color: white;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 12px 16px;
-    max-width: 800px;
-    margin: 40px auto 20px auto;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-header img {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid white;
-}
-
-header h3 {
-    margin: 0;
-    font-size: 16px;
-}
-
-header small {
-    font-size: 12px;
-    color: rgba(255,255,255,0.8);
-}
-
-header .join-btn, header a {
-    flex-shrink: 0;
-    font-weight: 600;
-    border-radius: 8px;
-    text-decoration: none;
-    text-align: center;
-    padding: 6px 12px;
-}
-
-header .join-btn {
-    background: white;
-    color: #007bff;
-    border: none;
-    cursor: pointer;
-}
-
-header a {
-    color: white;
-    background: rgba(255,255,255,0.2);
-}
-
-header a:hover, header .join-btn:hover {
-    opacity: 0.85;
-}
-
-/* MAIN */
-main {
-    max-width: 600px;
-    margin: 0 auto 30px auto;
-    padding: 0 15px;
-}
-
-/* POST CARD */
-.post-card {
-    background: white;
-    padding: 12px 14px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.post-card p {
-    margin: 0 0 6px 0;
-    word-wrap: break-word;
-}
-
-.post-card small {
-    color: gray;
-    font-size: 12px;
-}
-
-.post-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 8px;
-    font-size: 13px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.like-btn {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 13px;
-}
-
-.like-btn:hover {
-    opacity: 0.8;
-}
-
-/* EMPTY STATE */
-.empty {
-    text-align: center;
-    color: gray;
-    margin-top: 60px;
-    font-size: 16px;
-}
-
-/* RESPONSIVE */
-@media (max-width: 480px) {
-    header {
-        justify-content: center;
-        text-align: center;
-        gap: 8px;
-    }
-    header h3, header small {
-        width: 100%;
-    }
-    header .join-btn, header a {
-        width: 48%;
-        font-size: 14px;
-        padding: 6px 0;
-    }
-    .post-actions {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
-    .post-card p {
-        font-size: 14px;
-    }
-}
-</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ username }}'s Posts | Serengeti Chatbot</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<header>
-  <img 
-    src="{{ url_for('static', filename='profile_images/' + profile_pic) }}"
-    style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid white;">
+  <header class="page-header">
+    <h1>Posts</h1>
+    <div class="header-links">
+      <a href="/collaborate">← Back</a>
+    </div>
+  </header>
 
-  <div style="flex:1;">
-    <h3 style="margin:0;">{{ username }}'s Posts</h3>
-    <small>{{ joins }} joined</small>
-  </div>
+  <div class="page-wrapper" style="max-width:680px;">
 
-  <button 
-    id="joinBtn"
-    onclick="toggleJoin('{{ username }}')"
-    style="
-      background:white;
-      color:#007bff;
-      border:none;
-      padding:6px 12px;
-      border-radius:8px;
-      font-weight:600;
-      cursor:pointer;
-    ">
-    {{ 'Unjoin' if joined else 'Join' }}
-  </button>
+    <!-- User Header -->
+    <div class="user-posts-header">
+      <img class="avatar avatar-md"
+        src="{{ url_for('static', filename='profile_images/' + profile_pic) }}"
+        alt="{{ username }}">
 
-  <a href="/collaborate">⬅ Back</a>
-</header>
-
-<main>
-
-{% if posts %}
-  {% for post in posts %}
-    <div class="post-card">
-
-      <!-- CLICKABLE POST -->
-      <a href="/post/{{ post[0] }}" style="text-decoration:none; color:#333;">
-        <p>{{ post[1] }}</p>
-      </a>
-
-      <small>{{ post[2] }}</small>
-
-      <!-- ACTIONS -->
-      <div class="post-actions">
-
-        <!-- LIKE -->
-        <button class="like-btn" data-id="{{ post[0] }}">
-          ❤️ <span class="count">{{ post[3] }}</span>
-        </button>
-
-        <!-- REPLIES -->
-        <span>💬 {{ post[4] }}</span>
-
+      <div class="user-posts-info">
+        <h3>{{ username }}'s Posts</h3>
+        <small id="join-count-text">{{ joins }} joined</small>
       </div>
 
+      <div class="header-actions">
+        <button id="joinBtn" class="btn btn-accent btn-sm"
+          onclick="toggleJoin('{{ username }}')">
+          {{ 'Unjoin' if joined else 'Join' }}
+        </button>
+      </div>
     </div>
-  {% endfor %}
-{% else %}
-  <div class="empty">
-    Hakuna cha kuona sasa 😌
+
+    <!-- Posts -->
+    {% if posts %}
+      {% for post in posts %}
+      <div class="post-card">
+        <div class="post-body" style="width:100%;">
+          <a href="/post/{{ post[0] }}" style="text-decoration:none;">
+            <div class="post-text">{{ post[1] }}</div>
+          </a>
+          <div class="post-time">{{ post[2] }}</div>
+          <div class="post-actions">
+            <button class="like-btn" data-id="{{ post[0] }}">
+              ❤️ <span class="count">{{ post[3] }}</span>
+            </button>
+            <span style="font-size:0.82rem; color:var(--text-muted);">💬 {{ post[4] }} replies</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">Hakuna cha kuona sasa 😌</div>
+    {% endif %}
+
   </div>
-{% endif %}
 
-</main>
-
-<script>
-function toggleJoin(username) {
-  fetch(`/toggle_join/${username}`, { method: "POST" })
-    .then(res => res.json())
-    .then(data => {
-      if (data.error) return;
-      document.getElementById("joinBtn").innerText =
-        data.action === "joined" ? "Unjoin" : "Join";
-    });
-}
-
-// LIKE BUTTONS
-document.querySelectorAll(".like-btn").forEach(btn => {
-  btn.onclick = () => {
-    fetch(`/toggle_like/${btn.dataset.id}`, { method: "POST" })
-      .then(res => res.json())
+  <script>
+  function toggleJoin(username) {
+    fetch(`/toggle_join/${username}`, { method: "POST" })
+      .then(r => r.json())
       .then(data => {
-        if (data.likes !== undefined) {
-          btn.querySelector(".count").textContent = data.likes;
-          btn.style.color = data.action === "liked" ? "red" : "black";
-        }
+        if (data.error) return;
+        document.getElementById("joinBtn").innerText =
+          data.action === "joined" ? "Unjoin" : "Join";
       });
-  };
-});
-</script>
+  }
 
+  document.querySelectorAll(".like-btn").forEach(btn => {
+    btn.onclick = () => {
+      fetch(`/toggle_like/${btn.dataset.id}`, { method: "POST" })
+        .then(r => r.json())
+        .then(data => {
+          if (data.likes !== undefined) {
+            btn.querySelector(".count").textContent = data.likes;
+            btn.classList.toggle("liked", data.action === "liked");
+          }
+        });
+    };
+  });
+  </script>
 </body>
 </html>
