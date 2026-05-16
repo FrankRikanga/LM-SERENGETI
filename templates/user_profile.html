@@ -2,164 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ user.name }} | Serengeti Chatbot</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-/* BASE */
-body {
-    font-family: "Poppins", sans-serif;
-    margin: 0;
-    background: linear-gradient(to bottom right, #eaf4ff, #f8fbff);
-    color: #333;
-}
-header {
-    background: #007bff;
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-header h1 { font-size: 1.5em; margin: 0; }
-header a {
-    color: white;
-    background: rgba(255,255,255,0.2);
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    margin-top: 6px;
-}
-header a:hover { background: rgba(255,255,255,0.35); }
-
-/* MAIN */
-main {
-    max-width: 800px;
-    margin: 30px auto;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    padding: 25px;
-}
-
-/* PROFILE */
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 20px;
-    flex-wrap: wrap;
-}
-.profile img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #007bff;
-}
-.profile h2 { margin: 0; color: #007bff; }
-.profile p { margin: 3px 0; color: #666; }
-
-/* SECTIONS */
-.section { margin-top: 25px; }
-.section h3 { color: #007bff; margin-bottom: 10px; }
-.card {
-    background: #f9fbff;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-/* BUTTONS */
-textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    resize: none;
-    height: 100px;
-    font-family: inherit;
-}
-.actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 12px;
-    flex-wrap: wrap;
-}
-.btn {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    flex: 1;
-}
-.btn.edit {
-    background: #28a745;
-}
-.btn:hover { opacity: 0.9; }
-.btn.edit:hover { opacity: 0.85; }
-
-/* RESPONSIVE */
-@media (max-width: 480px) {
-    .profile {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    .profile div { width: 100%; }
-    .actions {
-        flex-direction: column;
-    }
-    .btn { flex: unset; width: 100%; }
-}
-</style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <header>
-    <h1> {{ user.name or 'User Profile' }}</h1>
-    <a href="/">Home</a>
+
+  <header class="page-header">
+    <h1>{{ user.name or 'My Profile' }}</h1>
+    <div class="header-links">
+      <a href="/">Home</a>
+    </div>
   </header>
 
-  <main>
-    <div class="profile">
-      <img 
-      src="{{ url_for('static', filename='profile_images/' + (user.profile_pic or 'default_avatar.png')) }}"
-      alt=".......Profile ...........Picture ..................................."
-      style="width:120px; height:120px; border-radius:50%; object-fit:cover;">
+  <div class="page-wrapper">
+    <div class="card">
 
-
-
-      <div>
-        <h2>{{ user.name }}</h2>
-        <p><strong>Email:</strong> {{ user.email or 'Not specified' }}</p>
-        <p><strong>Age:</strong> {{ user.age or 'Not specified' }}</p>
-        <p><strong>Role:</strong> {{ user.role or 'user' }}</p>
+      <!-- Profile Hero -->
+      <div class="profile-hero">
+        <img class="avatar avatar-xl"
+          src="{{ url_for('static', filename='profile_images/' + (user.profile_pic or 'default_avatar.png')) }}"
+          alt="Profile Picture">
+        <div class="profile-info">
+          <h2>{{ user.name }}</h2>
+          <p><strong>Email:</strong> {{ user.email or 'Not specified' }}</p>
+          <p><strong>Age:</strong> {{ user.age or 'Not specified' }}</p>
+          <span class="badge badge-brand role-badge">{{ user.role or 'user' }}</span>
+        </div>
       </div>
-    </div>
 
-    <div class="section">
-      <h3>Notes</h3>
-      <div class="card">{{ user.notes or 'No notes yet.' }}</div>
-    </div>
+      <!-- Notes -->
+      <div class="section-title" style="margin-top:22px;"> Notes</div>
+      <div class="card" style="background:var(--page-bg); box-shadow:none;">
+        {{ user.notes or 'No notes yet.' }}
+      </div>
 
-    <div class="section">
-      <h3>Create a Post</h3>
+      <!-- Create a Post -->
+      <div class="section-title" style="margin-top:22px;">Create a Post</div>
       <form action="/post" method="POST">
-  <textarea name="content" placeholder="What's on your mind?"></textarea>
-  <div class="actions">
-    <button type="submit" class="btn">Post</button>
-    <a href="/edit_profile" class="btn edit">Edit Profile</a>
-  </div>
-</form>
+        <div class="form-group">
+          <textarea class="form-control" name="content" placeholder="What's on your mind?"></textarea>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button type="submit" class="btn btn-primary" style="flex:1;">Post</button>
+          <a href="/edit_profile" class="btn btn-success" style="flex:1;"> Edit Profile</a>
+        </div>
+      </form>
 
     </div>
-  </main>
+  </div>
+
 </body>
 </html>
