@@ -2,205 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Profile | Serengeti Chatbot</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(to bottom right, #eaf4ff, #f8fbff);
-  margin: 0;
-}
-
-header {
-  background: #007bff;
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap; /* wrap on small screens */
-}
-
-header h1 {
-  font-size: 18px;
-  margin: 5px 0;
-}
-
-header a {
-  color: white;
-  background: rgba(255,255,255,0.2);
-  padding: 6px 12px;
-  border-radius: 8px;
-  text-decoration: none;
-  margin-top: 5px;
-  font-size: 14px;
-}
-
-main {
-  max-width: 600px;
-  width: 90%; /* flexible width */
-  margin: 20px auto;
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
-
-label {
-  display: block;
-  margin-top: 10px;
-  color: #007bff;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-family: inherit;
-  font-size: 14px;
-}
-
-textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.btn, button[type="submit"] {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  margin-top: 15px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 15px;
-  width: 100%;
-}
-
-.btn:hover, button[type="submit"]:hover {
-  background: #0056b3;
-}
-
-/* Image preview for mobile */
-#profilePreview {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  display: block;
-  margin-bottom: 10px;
-}
-
-/* Responsive adjustments for phones */
-@media (max-width: 500px) {
-  header {
-    justify-content: center;
-    text-align: center;
-    gap: 10px;
-  }
-
-  header h1 {
-    font-size: 16px;
-  }
-
-  header a {
-    font-size: 13px;
-    padding: 5px 10px;
-  }
-
-  main {
-    padding: 15px;
-  }
-
-  label, input, textarea, button[type="submit"] {
-    font-size: 13px;
-  }
-
-  #profilePreview {
-    width: 80px;
-    height: 80px;
-  }
-}
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <header>
-    <h1>Edit Profile</h1>
-    <a href="/user_profile">⬅ Back</a>
+
+  <header class="page-header">
+    <h1>✏️ Edit Profile</h1>
+    <div class="header-links">
+      <a href="/user_profile">← Back</a>
+    </div>
   </header>
 
-  <main>
-    <form method="POST" enctype="multipart/form-data">
-     <label>Name</label>
-     <input type="text" name="name" value="{{ profile.name or '' }}">
+  <div class="page-wrapper" style="max-width:600px;">
+    <div class="card">
+      <form method="POST" enctype="multipart/form-data">
 
-     <label>Email</label>
-     <input type="email" name="email" value="{{ profile.email or '' }}">
+        <!-- Avatar preview -->
+        <div class="edit-profile-preview">
+          <img id="profilePreview"
+            src="{{ profile.profile_pic or 'default_avatar.png' }}"
+            alt="Profile Preview">
+          <div>
+            <div style="font-weight:600; margin-bottom:4px;">Profile Photo</div>
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer;">
+              Change Photo
+              <input type="file" name="profile_pic" accept="image/*"
+                onchange="previewImage(event)"
+                style="display:none;">
+            </label>
+          </div>
+        </div>
 
-     <label>Age</label>
-     <input type="number" name="age" value="{{ profile.age or '' }}">
+        <hr class="divider">
 
-     <label>Notes</label>
-     <textarea name="notes">{{ profile.notes or '' }}</textarea>
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input class="form-control" type="text" name="name" value="{{ profile.name or '' }}" placeholder="Your name">
+        </div>
 
-     <label>Profile Picture</label>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-control" type="email" name="email" value="{{ profile.email or '' }}" placeholder="your@email.com">
+        </div>
 
-    <!-- Image Preview -->
-    <img id="profilePreview"
-     src="{{ profile.profile_pic or 'default_avatar.png' }}"
-     style="
-        width: 120px; 
-        height: 120px; 
-        border-radius: 50%; 
-        object-fit: cover;
-        display: block;
-        margin-bottom: 10px;
-     ">
+        <div class="form-group">
+          <label class="form-label">Age</label>
+          <input class="form-control" type="number" name="age" value="{{ profile.age or '' }}" placeholder="Your age">
+        </div>
 
-      <!-- Image Upload Input -->
-      <input 
-    type="file" 
-    name="profile_pic" 
-    accept="image/*"
-    onchange="previewImage(event)"
-    style="
-        padding: 10px;
-        border-radius: 8px;
-        background: #f7f7f7;
-        border: 1px solid #ccc;
-    "
-     >
+        <div class="form-group">
+          <label class="form-label">Notes</label>
+          <textarea class="form-control" name="notes" placeholder="Write something about yourself…">{{ profile.notes or '' }}</textarea>
+        </div>
 
-     <button 
-    type="submit" 
-    style="
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 12px 18px;
-        border-radius: 8px;
-        margin-top: 20px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 15px;
-        width: 100%;
-    "
-     >
-    Save Changes
-     </button>
-    </form>
-  </main>
+        <button type="submit" class="btn btn-primary btn-full">💾 Save Changes</button>
+      </form>
+    </div>
+  </div>
 
-<script>
-function previewImage(event) {
-    const img = document.getElementById('profilePreview');
-    img.src = URL.createObjectURL(event.target.files[0]);
-}
-</script>
+  <script>
+  function previewImage(e) {
+    document.getElementById('profilePreview').src = URL.createObjectURL(e.target.files[0]);
+  }
+  </script>
 </body>
 </html>
+
